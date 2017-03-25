@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage
+[
+    a4paper,
+    top=2cm,
+    bottom=3cm,
+    left=2cm,
+    right=2cm
+]{geometry}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xeCJK}
+\setCJKmainfont{微軟正黑體}
+
+\title{自動機與形式語言 Homework 1}
+\author{B03902086 李鈺昇}
+\date{}
+
+\begin{document}
+    \maketitle
+    
+    \renewcommand{\baselinestretch}{1.5}
+    
+    \section{}
+        We know that $x \sim_n y \Longleftrightarrow x \equiv y$ mod $n \Longleftrightarrow x - y = kn, k \in \mathbb{Z}$. \\
+        Assume $n \neq 0$. To show that $\sim_n$ is an equivalence relation,
+        it suffices to check the following:
+        \begin{itemize}
+            \item Reflexive: $\forall x \in \mathbb{Z}, x - x = 0 = 0 \times n$, so $x \sim_n x$.
+            \item Symmetric: $\forall x, y \in \mathbb{Z}$, \\
+                $x \sim_n y \\
+                \Longleftrightarrow x - y = kn, k \in \mathbb{Z} \\
+                \Longleftrightarrow y - x = -kn$, and $-k \in \mathbb{Z} \\
+                \Longleftrightarrow y \sim_n x$.
+            \item Transitive: $\forall x, y, z \in \mathbb{Z}$, \\
+                $x \sim_n y$ and $y \sim_n z \\
+                \Longrightarrow x - y = k_1n, y - z = k_2n, k_1, k_2 \in \mathbb{Z} \\
+                \Longrightarrow x - z = (x - y) + (y - z) = (k_1 + k_2)n$, and $k_1 + k_2 \in \mathbb{Z} \\
+                \Longrightarrow x \sim_n z$.
+        \end{itemize}
+        There are $n$ equivalence classes,
+        since all the possible remainders modulo $n$ are $\{0, 1, ..., n-1\}$,
+        and $x \sim_n y$ iff $[x]_\sim = [y]_\sim$,
+        which means two integers falls into the same class iff their remainders modulo $n$ are the same.
+    
+    \section{}
+        All the following k $\in \mathbb{Z}$.
+        \begin{itemize}
+            \item 0. If $x \equiv 0$ mod 3, $x - 0 = 3k, 2x = 6k = 3(2k) + 0, 2x \equiv 0$ mod 3.
+            \item 1. If $x \equiv 0$ mod 3, $x - 0 = 3k, 2x + 1 = 6k + 1 = 3(2k) + 1, 2x + 1 \equiv 1$ mod 3.
+            \item 2. If $x \equiv 1$ mod 3, $x - 1 = 3k, 2x = 6k + 2 = 3(2k) + 2, 2x \equiv 2$ mod 3.
+            \item 0. If $x \equiv 1$ mod 3, $x - 1 = 3k, 2x + 1 = 6k + 3 = 3(2k + 1) + 0, 2x + 1 \equiv 0$ mod 3.
+            \item 1. If $x \equiv 2$ mod 3, $x - 2 = 3k, 2x = 6k + 4 = 3(2k + 1) + 1, 2x \equiv 1$ mod 3.
+            \item 2. If $x \equiv 2$ mod 3, $x - 2 = 3k, 2x + 1 = 6k + 5 = 3(2k + 1) + 2, 2x + 1 \equiv 2$ mod 3.
+        \end{itemize}
+    
+    \section{}
+        Now assume $\sim$ is an equivalence relation over $X$.
+        \begin{itemize}
+            \item $[x]_\sim = [y]_\sim$ if and only if $x \sim y$. \\
+            
+            \textbf{Proof} $\quad$ On one hand, $[x]_\sim = [y]_\sim \\
+            \Longrightarrow y \in [y]_\sim = [x]_\sim$,
+            by definition of $[\cdot]_\sim$ and $y \sim y$ (reflexivity) \\
+            $\Longrightarrow x \sim y$, by definition of $[\cdot]_\sim$. \\
+            
+            On the other hand, $x \sim y \\
+            \Longrightarrow y \sim x$, by symmetry \\
+            $\Longrightarrow \forall z \in [x]_\sim, x \sim z$,
+            and thus $y \sim z$ by transitivity,
+            which implies $z \in [y]_\sim$. Hence $[x]_\sim \subseteq [y]_\sim$.
+            Similarly, $[y]_\sim \subseteq [x]_\sim$. \\
+            $\Longrightarrow [x]_\sim = [y]_\sim$. \\
+            
+            \item If $[x]_\sim \neq [y]_\sim$, then $[x]_\sim \cap [y]_\sim = \emptyset$. \\
+            
+            \textbf{Proof} $\quad$ Suppose $[x]_\sim \neq [y]_\sim$.
+            If $[x]_\sim \cap [y]_\sim \neq \emptyset, \exists z \in [x]_\sim \cap [y]_\sim$.
+            Then $z \in [x]_\sim, z \in [y]_\sim$,
+            hence $x \sim z$, $y \sim z$.
+            By symmetry and transitivity, $x \sim y$. \\
+            Now with the previous part of this lemma, we get $[x]_\sim = [y]_\sim$, a contradiction.
+            So $[x]_\sim \cap [y]_\sim = \emptyset$.
+        \end{itemize}
+    
+    \section{}
+        Each member of $X$ belongs to exactly one equivalence class of $\sim$. \\
+        
+        \textbf{Proof} $\quad \forall x \in X$, by reflexivity we know that $x \in [x]_\sim$.
+        Now suppose $x \in A$ and $x \in B$,
+        where $A$ and $B$ are (possibly identical) equivalence classes of $\sim$.
+        Then $x \in A \cap B$, which means $A \cap B \neq \emptyset$. \\
+        By the contrapositive of the second part of Lemma 1.1,
+        with $A, B$ in place of $[x]_\sim, [y]_\sim$ respectively, we have $A = B$.
+        Therefore $x$ belongs to exactly one equivalence class, i.e. $[x]_\sim$.
+\end{document}

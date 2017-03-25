@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage
+[
+    a4paper,
+    top=2cm,
+    bottom=3cm,
+    left=2cm,
+    right=2cm
+]{geometry}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xeCJK}
+\setCJKmainfont{微軟正黑體}
+\renewcommand{\thesection}{(\arabic{section})}
+\newcommand{\tm}[1][M]{\ifmmode \mathcal{#1} \else $\mathcal{#1}$ \fi}
+\newcommand{\des}[1][M]{\ifmmode \lfloor \tm[#1] \rfloor \else $\lfloor \tm[#1] \rfloor$ \fi}
+
+
+\title{自動機與形式語言 Homework 5}
+\author{Class 02 B03902086 李鈺昇}
+\date{}
+
+\begin{document}
+    \maketitle
+    
+    \section{}
+    First, recall the computable function that appears in the solution to HW4: \\ \\
+    \begin{tabular}{|l l|}
+        \hline
+        \multicolumn{2}{|l|}{$\mathsf{Function \textrm{-} All \textrm{-} or \textrm{-} Nothing}$} \\
+        \hline
+        \textbf{Input}: & A TM description \des and a word $w$ \\
+        \textbf{Task}: & Output another TM description $\lfloor \tm_w \rfloor$ such that: \\
+        & $\bullet$ If \tm accepts $w$, $\tm[M]_w$ accepts every word. \\
+        & $\bullet$ If \tm does not accept $w$, $\tm[M]_w$ does not accept any word. \\
+        \hline
+    \end{tabular} \\ \\ \\
+    Let $\mathsf{Accept \textrm{-} Epsilon} = \{ \des \mid \tm \textrm{ accepts } \epsilon \}$.
+    Now I show $\mathsf{HALT} = \{ \des\$w \mid \tm \textrm{ accepts } w \} \leq_T \mathsf{Accept \textrm{-} Epsilon}$ by giving the following algorithm: \\ \\ \\
+    \begin{tabular}{|p{15cm}}
+        On input $\des\$w$ of $\mathsf{HALT}$,
+        \begin{itemize}
+            \item Compute $\lfloor \tm_w \rfloor$ with $\mathsf{Function \textrm{-} All \textrm{-} or \textrm{-} Nothing}(\des, w)$.
+            \item Suppose \tm[N] decides $\mathsf{Accept \textrm{-} Epsilon}$. Check whether $\lfloor \tm_w \rfloor \in \mathsf{Accept \textrm{-} Epsilon}$ by running \tm[N] on $\lfloor \tm_w \rfloor$. Output \texttt{True} if so, otherwise output \texttt{False}.
+        \end{itemize}
+    \end{tabular} \\ \\ \\
+    The correctness of this reduction is clear as follows:
+    \begin{itemize}
+        \item If $\des\$w \in \mathsf{HALT}$, \tm accepts $w$. Thus $\lfloor \tm_w \rfloor$ accepts every word, including $\epsilon$. So $\lfloor \tm_w \rfloor \in \mathsf{Accept \textrm{-} Epsilon}$.
+        \item If $\des\$w \notin \mathsf{HALT}$, \tm does not accept $w$. Thus $\lfloor \tm_w \rfloor$ does not accept any word, which means it does not accept $\epsilon$. So $\lfloor \tm_w \rfloor \notin \mathsf{Accept \textrm{-} Epsilon}$.
+    \end{itemize}
+    Since $\mathsf{HALT}$ is undecidable and $\mathsf{HALT} \leq_T \mathsf{Accept \textrm{-} Epsilon}$, we know $\mathsf{Accept \textrm{-} Epsilon}$ is undecidable.
+    
+    \section{}
+    Suppose $L_1, L_2 \in \textbf{NP}$.
+    By definition, there are NTMs $\tm_1, \tm_2$ such that $\tm_1$ decides $L_1$ in $O(n^{k_1})$ time, and $\tm_2$ decides $L_2$ in $O(n^{k_2})$ time.
+    Construct NTMs $\tm_\cup, \tm_\cap$ as follows:
+    \begin{itemize}
+        \item $\tm_\cup$ = ``On input $w$, run $\tm_1$ on $w$ and $\tm_2$ on $w$. If at least one of them accept, accept; otherwise, reject.''
+        \item $\tm_\cap$ = ``On input $w$, run $\tm_1$ on $w$ and $\tm_2$ on $w$. If both of them accept, accept; otherwise, reject.''
+    \end{itemize}
+    It's obvious that $\tm_\cup$ decides $L_1 \cup L_2$ and $\tm_\cap$ decides $L_1 \cap L_2$. \\
+    Since $\tm_\cup$ and $\tm_\cap$ both call $\tm_1$ and $\tm_2$ exactly once, we know $\tm_\cup$ and $\tm_\cap$ both run in $O(n^{k_1}) + O(n^{k_2}) = O(n^k)$ time, where $k = \max(k_1, k_2)$. \\
+    It then follows that $L_1 \cup L_2, L_1 \cap L_2 \in \textbf{NP}$.
+    
+    \section{}
+    By definition of \textbf{coNP} = $\{ L \mid \Sigma^* - L \in \textbf{NP} \}$, if $\Sigma^* - L \in \textbf{coNP}$, then $L = \Sigma^* - (\Sigma^* - L) \in \textbf{NP}$. \\
+    The second argument (if $L \in \textbf{coNP}$ then $\Sigma^* - L \in \textbf{NP}$) is immediate by definition.
+    
+    \section{} \label{prob4}
+    Suppose $\textbf{NP} \subseteq \textbf{coNP}$. \\
+    Now for any $L \in \textbf{coNP}$, we have $\Sigma^* - L \in \textbf{NP} \subseteq \textbf{coNP}$, which implies $L = \Sigma^* - (\Sigma^* - L) \in \textbf{NP}$. \\
+    So $\textbf{coNP} \subseteq \textbf{NP}$, hence $\textbf{NP} = \textbf{coNP}$.
+    
+    \section{}
+    Suppose $\textsf{SAT} \in \textbf{coNP}$.
+    Then $\Sigma^* - \textsf{SAT} \in \textbf{NP}$. \\
+    Let \tm be the polynomial-time NTM that decides $\Sigma^* - \textsf{SAT}$. \\ \\
+    Now for any $L \in \textbf{NP}$, we have $L \leq_p \textsf{SAT}$, since $\textsf{SAT}$ is \textbf{NP}-hard.
+    So there is a polynomial-time computable function $f: \Sigma^* \rightarrow \Sigma^*$ such that
+    \begin{equation} \label{eq1}
+        w \in L \Leftrightarrow f(w) \in \textsf{SAT}.
+    \end{equation}
+    Clearly (\ref{eq1}) equivalent to
+    \begin{equation} \label{eq2}
+        w \in \Sigma^* - L \Leftrightarrow f(w) \in \Sigma^* - \textsf{SAT},
+    \end{equation}
+    which implies $\Sigma^* - L \leq_p \Sigma^* - \textsf{SAT}$. \\ \\
+    Now construct the NTM $\tm[N] = $ ``On input $w$, output the result of \tm on $f(w)$,'' which decides $\Sigma^* - L$ by (\ref{eq2}).
+    We see that $\tm[N]$ runs in polynomial time since \tm and $f$ both run in polynomial time. \\
+    Therefore $\Sigma^* - L \in \textbf{NP}$, or $L \in \textbf{coNP}$. \\ \\
+    The above shows $\textbf{NP} \subseteq \textbf{coNP}$, and hence $\textbf{NP} = \textbf{coNP}$ by Problem \ref{prob4}.
+\end{document}
